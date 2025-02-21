@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.io.*;
+import java.util.Arrays;
 
 public class HttpServer {
     public static void main(String[] args) throws IOException {
@@ -49,13 +50,27 @@ public class HttpServer {
     }
 
     public static String ejecutarComando(String comando) throws InvocationTargetException, NoSuchMethodException, IllegalAccessException {
-        String[] parts = comando.substring(0,comando.length()-1).split("\\(");
-        String functionName = parts[0].trim();
-        double[] params = new double[parts.length-1];
-        for (int i =1; i< parts.length; i++){
-            params[i-1] = Double.parseDouble(parts[i]);
+        if (comando.startsWith("bbl(")){
+            String stringList = comando.substring(4,comando.length()-1);
+            String[] numList = stringList.substring(1,stringList.length()-1).split(",");
+            System.out.println(Arrays.toString(numList));
+            System.out.println(numList.length);
+            Integer[] list = new Integer[numList.length];
+            for (int i= 0; i<numList.length; i++){
+                list[i] = Integer.parseInt(numList[i]);
+            }
+            return Arrays.toString(bubbleSort(list));
+
+
+        } else {
+            String[] parts = comando.substring(0,comando.length()-1).split("\\(");
+            String functionName = parts[0].trim();
+            double[] params = new double[parts.length-1];
+            for (int i =1; i< parts.length; i++){
+                params[i-1] = Double.parseDouble(parts[i]);
+            }
+            return mathOperation(functionName, params);
         }
-        return mathOperation(functionName, params);
     }
 
     // sirve con uno y dos parámetros :)

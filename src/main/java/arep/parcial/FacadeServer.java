@@ -4,11 +4,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 
 public class FacadeServer {
     public static void main(String[] args) throws IOException {
@@ -22,6 +19,7 @@ public class FacadeServer {
         while (true) {
             Socket clientSocket = serverSocket.accept();
             new Thread(() -> handleRequest(clientSocket)).start();
+
         }
     }
 
@@ -41,7 +39,7 @@ public class FacadeServer {
                             + htmlResponse;
                     out.println(httpResponse);
                     break;
-                } else if (inputLine.startsWith("GET /compreflex?comando=")) {
+                } else if (inputLine.startsWith("GET /computar?comando=")) {
                     String comando = inputLine.split("=")[1].split(" ")[0];
                     String response = redireccionServer(comando);
                     String httpResponse = "HTTP/1.1 200 OK\r\n"
@@ -69,7 +67,7 @@ public class FacadeServer {
         return "<!DOCTYPE html>\n" +
                 "<html>\n" +
                 "<head>\n" +
-                "    <title>Form Example</title>\n" +
+                "    <title>PARCIAL AREP</title>\n" +
                 "    <meta charset=\"UTF-8\">\n" +
                 "    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
                 "</head>\n" +
@@ -105,7 +103,8 @@ public class FacadeServer {
         Socket socket = new Socket("localhost",36000);
         PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
         BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-        String res = "GET /compreflex?comando=" + comando + "HTTP/1.1\r\n Host:localhost\r\n\r\n";
+
+        String res = "GET /computar?comando=" + comando + "HTTP/1.1\r\n Host:localhost\r\n\r\n";
         out.println(res);
         StringBuilder response = new StringBuilder();
         String line;
@@ -113,6 +112,8 @@ public class FacadeServer {
         while((line=in.readLine()) != null){
             response.append(line);
         }
+        socket.close();
+        in.close();
         return response.toString().split("\r\n\r\n")[1];
     }
 }
