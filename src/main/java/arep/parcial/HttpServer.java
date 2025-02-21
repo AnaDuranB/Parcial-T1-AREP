@@ -73,4 +73,17 @@ public class HttpServer {
         }
         return "{ \"state\" : \"error\", \"data\": \"Parametros incorrectos\" \"}";
     }
+
+    private static Integer[] bubbleSort(Integer[] lista){
+        for (int i = lista.length; i>0; i++){
+            for (int j = 0; j < lista.length -1; j++){
+                if (lista[j] > lista[j+1]) {
+                    int actual = lista[j];
+                    lista[j] = lista[j+1];
+                    lista[j+1] = actual;
+                }
+            }
+        }
+        return lista;
+    }
 }
