@@ -6,43 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-<h1>Form with GET</h1>
-<form action="/hello">
-    <label for="name">Name:</label><br>
-    <input type="text" id="name" name="name" value="John"><br><br>
-    <input type="button" value="Submit" onclick="loadGetMsg()">
-</form>
-<div id="getrespmsg"></div>
 
-<script>
-    function loadGetMsg() {
-        let nameVar = document.getElementById("name").value;
-        const xhttp = new XMLHttpRequest();
-        xhttp.onload = function() {
-            document.getElementById("getrespmsg").innerHTML =
-            this.responseText;
-        }
-        xhttp.open("GET", "/hello?name="+nameVar);
-        xhttp.send();
-    }
-</script>
-
-<h1>Form with POST</h1>
-<form action="/hellopost">
-    <label for="postname">Name:</label><br>
-    <input type="text" id="postname" name="name" value="John"><br><br>
-    <input type="button" value="Submit" onclick="loadPostMsg(postname)">
+<h1>ReflexCalculator</h1>
+<form>
+    <label>Operation:</label><br>
+    <input type="text" id="funcion"><br><br>
+    <input type="button" value="Submit" onclick="enviarFuncion()">
 </form>
 
-<div id="postrespmsg"></div>
+<div id="respuesta"></div>
 
 <script>
-    function loadPostMsg(name){
-        let url = "/hellopost?name=" + name.value;
+    function enviarFuncion(name){
+        const funcion = document.getElementById('funcion').value
+        let url = "http://localhost:36000/compreflex?comando=" + funcion;
 
-        fetch (url, {method: 'POST'})
-            .then(x => x.text())
-            .then(y => document.getElementById("postrespmsg").innerHTML = y);
+        fetch (url)
+            .then(response => {
+                return response.json();
+            })
+            .then(data => { document.getElementById("respuesta").innerHTML = JSON.stringify(data, null, 2))
+            };
     }
 </script>
 </body>

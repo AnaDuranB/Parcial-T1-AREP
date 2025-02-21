@@ -29,11 +29,12 @@ public class HttpServer {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 System.out.println("Recibí: " + inputLine);
-                if (inputLine.startsWith("GET /compreflex=")) {
+                if (inputLine.startsWith("GET /compreflex?comando=")) {
                     String comando = inputLine.split("=")[1].split(" ")[0];
                     String respuesta = ejecutarComando(comando);
                     String httpResponse = "HTTP/1.1 200 OK\r\n"
-                            + "Content-Type: text/html\r\n"
+                            + "Content-Type: application/json\r\n"
+                            + "Access-Control-Allow-Origin: *\r\n"
                             + "Content-Length: " + respuesta.length() + "\r\n"
                             + "\r\n"
                             + respuesta;
@@ -57,6 +58,7 @@ public class HttpServer {
         return mathOperation(functionName, params);
     }
 
+    // sirve con uno y dos parámetros :)
     private static String mathOperation(String functionName, double[] params) throws NoSuchMethodException, InvocationTargetException, IllegalAccessException {
         Class<Math> classMath = Math.class;
         Method method;
@@ -68,7 +70,6 @@ public class HttpServer {
             method = classMath.getMethod(functionName, double.class, double.class);
             double respuesta = (double) method.invoke(null, params[0], params[1]);
             return "{ \"state\" : \"success\", \"data\" : \"" + respuesta + "\"}";
-
         }
         return "{ \"state\" : \"error\", \"data\": \"Parametros incorrectos\" \"}";
     }
